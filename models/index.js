@@ -1,17 +1,44 @@
-const sequelize = require('../config/database');
-const Produto = require('./produto.model');
+// models/index.js
+const { Sequelize } = require('sequelize');
+
+let sequelize;
+
+if (process.env.NODE_ENV === 'test') {
+  sequelize = new Sequelize({
+    dialect: 'sqlite',
+    storage: ':memory:',
+    logging: false
+  });
+} else {
+  sequelize = new Sequelize('railway', 'root', 'WXNfxBJXvAhTTffFXFKbeZrpxiDQfWXO', {
+    host: 'nozomi.proxy.rlwy.net',
+    port: 44062,
+    dialect: 'mysql',
+    logging: false
+  });
+}
+
+// Importar a função que define o modelo
+const defineProduto = require('./produto.model');
+
+// Criar o modelo
+const Produto = defineProduto(sequelize);
 
 const syncDatabase = async () => {
   try {
-   //await sequelize.sync({ alter: true }); // Se você mudar o model (adicionar/remover campo, mudar tipo de dado), ele tenta ajustar a tabela automaticamente.
-    await sequelize.sync(); // apenas sincroniza sem apagar dados
-
+    await sequelize.sync();
     console.log('✅ Banco de dados sincronizado!');
   } catch (error) {
     console.error('❌ Erro ao sincronizar:', error);
   }
 };
 
-syncDatabase();
+if (process.env.NODE_ENV !== 'test') {
+  syncDatabase();
+}
 
-module.exports = { Produto };
+module.exports = { 
+  Produto, 
+  sequelize,
+  defineProduto 
+};

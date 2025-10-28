@@ -1,3 +1,4 @@
+// index.js
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
@@ -31,5 +32,11 @@ app.get('/api/status', (req, res) => {
     res.json({ status: 'API de Loja funcionando 🚀', database: 'Railway MySQL' });
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`🚀 Servidor rodando na porta ${PORT}`));
+// Só inicia o servidor se não for ambiente de teste
+if (process.env.NODE_ENV !== 'test') {
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => console.log(`🚀 Servidor rodando na porta ${PORT}`));
+}
+
+// Exporta o app para os testes
+module.exports = app;

@@ -1,78 +1,86 @@
+// routes/produto.routes.js
 const express = require('express');
-const { Produto } = require('../models');
-
 const router = express.Router();
 
-// Criar produto
+// Middleware para injetar o modelo nas rotas
+router.use((req, res, next) => {
+  // Em ambiente de teste, usa o modelo global
+  if (process.env.NODE_ENV === 'test' && global.testProduto) {
+    req.Produto = global.testProduto;
+  } else {
+    // Em ambiente de produção, usa o modelo padrão
+    const { Produto } = require('../models');
+    req.Produto = Produto;
+  }
+  next();
+});
+
+// CREATE - Adicionar um novo produto
 router.post('/produtos', async (req, res) => {
   try {
     const { nome, preco, estoque } = req.body;
-
-    if (!nome || !preco || estoque === undefined) {
-      return res.status(400).json({ error: 'Campos obrigatórios: nome, preco, estoque' });
-    }
-
-    const novoProduto = await Produto.create({ nome, preco, estoque });
-    res.status(201).json(novoProduto);
+    const produto = await req.Produto.create({ nome, preco, estoque });
+    res.status(201).json(produto);
   } catch (error) {
-    console.error('❌ Erro ao criar produto:', error);
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 });
 
-// Listar todos produtos
+// READ - Listar todos os produtos
 router.get('/produtos', async (req, res) => {
   try {
-    const produtos = await Produto.findAll();
+    const produtos = await req.Produto.findAll();
     res.json(produtos);
   } catch (error) {
-    res.status(500).json({ error: 'Erro ao buscar produtos' });
+    res.status(500).json({ error: error.message });
   }
 });
 
-// Buscar um produto por ID
+// READ - Listar um produto por ID
 router.get('/produtos/:id', async (req, res) => {
   try {
-    const produto = await Produto.findByPk(req.params.id);
-    if (produto) res.json(produto);
-    else res.status(404).json({ error: 'Produto não encontrado' });
+    const { id } = req.params;
+    const produto = await req.Produto.findByPk(id);
+    if (produto) {
+      res.json(produto);
+    } else {
+      res.status(404).json({ error: 'Produto não encontrado' });
+    }
   } catch (error) {
-    res.status(500).json({ error: 'Erro ao buscar produto' });
+    res.status(500).json({ error: error.message });
   }
 });
 
-// Atualizar um produto
+// UPDATE - Atualizar um produto
 router.put('/produtos/:id', async (req, res) => {
   try {
+    const { id } = req.params;
     const { nome, preco, estoque } = req.body;
-    const produto = await Produto.findByPk(req.params.id);
-
-    if (!produto) return res.status(404).json({ error: 'Produto não encontrado' });
-
-    // Atualiza apenas os campos enviados
-    if (nome !== undefined) produto.nome = nome;
-    if (preco !== undefined) produto.preco = preco;
-    if (estoque !== undefined) produto.estoque = estoque;
-
-    await produto.save();
-
-    res.json(produto);
+    const produto = await req.Produto.findByPk(id);
+    if (produto) {
+      await produto.update({ nome, preco, estoque });
+      res.json(produto);
+    } else {
+      res.status(404).json({ error: 'Produto não encontrado' });
+    }
   } catch (error) {
-    console.error('❌ Erro ao atualizar produto:', error);
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 });
 
-// Deletar um produto
+// DELETE - Deletar um produto
 router.delete('/produtos/:id', async (req, res) => {
   try {
-    const produto = await Produto.findByPk(req.params.id);
-    if (!produto) return res.status(404).json({ error: 'Produto não encontrado' });
-
-    await produto.destroy();
-    res.json({ message: 'Produto deletado com sucesso' });
+    const { id } = req.params;
+    const produto = await req.Produto.findByPk(id);
+    if (produto) {
+      await produto.destroy();
+      res.status(204).send();
+    } else {
+      res.status(404).json({ error: 'Produto não encontrado' });
+    }
   } catch (error) {
-    res.status(500).json({ error: 'Erro ao deletar produto' });
+    res.status(500).json({ error: error.message });
   }
 });
 

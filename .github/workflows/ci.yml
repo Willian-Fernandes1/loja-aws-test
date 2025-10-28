@@ -1,0 +1,25 @@
+name: CI Pipeline
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: windows-latest
+    #runs-on: ubuntu-latest # ← ESTÁ CORRETO ASSIM!
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        
+    - name: Install Dependencies
+      run: npm install
+      
+    - name: Run Tests
+      run: npm test
+      env:
+        NODE_ENV: test
+        # sucesso
