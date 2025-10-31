@@ -1,25 +1,47 @@
 name: CI Pipeline
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - '**'        # roda em pushes (mas deploy só ocorrerá em main)
+  pull_request: {}
 
 jobs:
   test:
     runs-on: windows-latest
-    #runs-on: ubuntu-latest # ← ESTÁ CORRETO ASSIM!
-    
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-        
-    - name: Install Dependencies
-      run: npm install
-      
-    - name: Run Tests
-      run: npm test
-      env:
-        NODE_ENV: test
-        # sucesso
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run Tests
+        run: npm test
+        env:
+          NODE_ENV: test
+
+  deploy:
+    # só roda se os testes do job anterior passarem
+    needs: test
+    # só roda no branch main (substitua 'main' se sua branch principal for 'master' etc.)
+    if: github.ref == 'refs/heads/main' && needs.test.result == 'success'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout (for logging context)
+        uses: actions/checkout@v4
+
+      - name: Trigger Render deploy via Deploy Hook
+        # usa o deploy hook guardado como secret no repo (ver passos abaixo)
+        run: |
+          echo "Triggering Render deploy..."
+          # POST simples é suficiente. Se preferir GET, troque por curl -sS "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
+          curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}" --fail --show-error
+        env:
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
