@@ -29,9 +29,6 @@ Projeto web completo com backend em Node.js/Express e frontend vanilla, implemen
 
 ## 🌐 Aplicação no Ar
 
-Acesse a aplicação em produção:  
-👉 **https://loja-aws-testes.onrender.com**
-
 ## 🛠️ Tecnologias Utilizadas
 
 ### Backend
