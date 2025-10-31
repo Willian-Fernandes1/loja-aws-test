@@ -1,6 +1,9 @@
 # Loja AWS - Sistema de Gerenciamento de Produtos
 
-Projeto web completo com backend em Node.js/Express e frontend vanilla, implementando um sistema de CRUD para produtos com testes automatizados e integração contínua.
+[![CI Pipeline](https://github.com/Willian-Fernandes1/loja-aws-testes/actions/workflows/ci.yml/badge.svg)](https://github.com/Willian-Fernandes1/loja-aws-testes/actions/workflows/ci.yml)
+[![Deploy Status](https://img.shields.io/badge/Deploy-Render-success?style=flat&logo=render&logoColor=white)](https://loja-aws-testes.onrender.com)
+
+Projeto web completo com backend em Node.js/Express e frontend vanilla, implementando um sistema de CRUD para produtos com testes automatizados, integração contínua e deploy automático.
 
 ## 🚀 Funcionalidades
 
@@ -21,10 +24,16 @@ Projeto web completo com backend em Node.js/Express e frontend vanilla, implemen
   - ✅ Testes de integração para o frontend (Jest + JSDOM)
   - ✅ Cobertura completa das operações CRUD
 
-- **Integração Contínua**:
+- **Integração Contínua e Deploy**:
   - ✅ Pipeline CI com GitHub Actions
   - ✅ Execução automática de testes
+  - ✅ Deploy automático para produção com Render
   - ✅ Validação do código em cada push/pull request
+
+## 🌐 Aplicação no Ar
+
+Acesse a aplicação em produção:  
+👉 **https://loja-aws-testes.onrender.com**
 
 ## 🛠️ Tecnologias Utilizadas
 
@@ -33,7 +42,7 @@ Projeto web completo com backend em Node.js/Express e frontend vanilla, implemen
 - **Express.js** - Framework web
 - **Sequelize** - ORM para banco de dados
 - **SQLite** - Banco de dados em memória para testes
-- **MySQL** - Banco de dados de produção (Railway)
+- **PostgreSQL** - Banco de dados de produção (Render)
 - **Jest** - Framework de testes
 - **Supertest** - Testes de API HTTP
 
@@ -44,9 +53,11 @@ Projeto web completo com backend em Node.js/Express e frontend vanilla, implemen
 - **Jest** - Framework de testes
 - **JSDOM** - Simulação de ambiente de navegador
 
-### CI/CD
+### CI/CD e Deploy
 - **GitHub Actions** - Automação de pipeline
+- **Render** - Plataforma de deploy na nuvem
 - **Cross-env** - Configuração de variáveis de ambiente
+- **Webhooks** - Integração GitHub-Render
 
 ## 📦 Instalação
 
@@ -57,5 +68,5 @@ Projeto web completo com backend em Node.js/Express e frontend vanilla, implemen
 ### Passos
 1. **Clone o repositório**:
    ```bash
-   git clone https://github.com/Willian-Fernandes1/loja-aws.git
-   cd loja-aws
+   git clone https://github.com/Willian-Fernandes1/loja-aws-testes.git
+   cd loja-aws-testes
