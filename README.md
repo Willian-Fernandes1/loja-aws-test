@@ -1,8 +1,5 @@
 # Loja AWS - Sistema de Gerenciamento de Produtos
 
-[![CI Pipeline](https://github.com/Willian-Fernandes1/loja-aws-testes/actions/workflows/ci.yml/badge.svg)](https://github.com/Willian-Fernandes1/loja-aws-testes/actions/workflows/ci.yml)
-[![Deploy Status](https://img.shields.io/badge/Deploy-Render-success?style=flat&logo=render&logoColor=white)](https://loja-aws-testes.onrender.com)
-
 Projeto web completo com backend em Node.js/Express e frontend vanilla, implementando um sistema de CRUD para produtos com testes automatizados, integração contínua e deploy automático.
 
 ## 🚀 Funcionalidades
